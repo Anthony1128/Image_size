@@ -2,6 +2,7 @@ import os
 from django.db import models
 
 
+# модель загружаемого изображения
 class Image(models.Model):
     file = models.ImageField(upload_to='origin/', blank=True)
     width = models.PositiveIntegerField(default=file.width_field, null=True, blank=True)
@@ -12,6 +13,8 @@ class Image(models.Model):
         filename = os.path.basename(self.file.name)
         return filename
 
+
+# модель измененного изображения
 class ChangedImage(models.Model):
     file = models.ImageField(upload_to='changed')
 

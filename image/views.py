@@ -11,12 +11,14 @@ from .models import Image, ChangedImage
 from .forms import AddForm, ChangeForm
 
 
+# контроллер стартовой страницы со списком всех загруженнных изображений
 def index(request):
     images = Image.objects.all()
     context = {'images': images}
     return render(request, 'image/index.html', context)
 
 
+# контроллер страницы изменения размера изображения
 def one_image(request, image_id):
     image = Image.objects.get(id=image_id)
     if request.method != 'POST':
@@ -24,9 +26,14 @@ def one_image(request, image_id):
     else:
         form = ChangeForm(request.POST)
         if form.is_valid():
+            # получаем ширину и высоту из формы
             width = int(form['width'].value())
             height = int(form['height'].value())
+
+            # формируем имя изменненного изображения
             name = str(width) + str(height) + str(image)
+
+            # меняем размер с помощью класса Image(as Pillow) from PIL
             im = Pillow.open('{}'.format(MEDIA_ROOT+'/'+str(image.file)))
             out = im.resize((width, height))
             buffer = BytesIO()
@@ -35,23 +42,30 @@ def one_image(request, image_id):
             new_pic = InMemoryUploadedFile(buffer, 'ImageField',
                                            name, 'image/jpeg',
                                            sys.getsizeof(buffer), None)
+
+            # сохраняем изменное изображение
             image = ChangedImage.objects.create(file=new_pic)
     context = {'image': image, 'form': form}
     return render(request, 'image/image.html', context)
 
 
+# контроллер добавления нового изображения
 def new_image(request):
     if request.method != 'POST':
         form = AddForm()
     else:
         form = AddForm(request.POST, request.FILES)
         if form.is_valid():
+
+            # проверяем какая форма была заполненна url или file
             img_url = form.cleaned_data.get('url')
             img_file = form.cleaned_data.get('file')
+
             if img_file:
                 image = form.save()
                 image_id = image.id
                 return HttpResponseRedirect('../{}'.format(image_id))
+
             elif img_url:
                 name = img_url.split('/')[-1]
                 image_content = ContentFile(requests.get(img_url).content)
