@@ -21,14 +21,25 @@ def index(request):
 # контроллер страницы изменения размера изображения
 def one_image(request, image_id):
     image = Image.objects.get(id=image_id)
+    proportion = image.width / image.height
     if request.method != 'POST':
         form = ChangeForm()
     else:
         form = ChangeForm(request.POST)
         if form.is_valid():
             # получаем ширину и высоту из формы
-            width = int(form['width'].value())
-            height = int(form['height'].value())
+            width = form['width'].value()
+            height = form['height'].value()
+            # сохраняем пропорции
+            try:
+                width, height = map(int, [width, height])
+            except ValueError:
+                if height:
+                    width = proportion * int(height)
+                    width, height = map(int, [width, height])
+                elif width:
+                    height = int(width) / proportion
+                    width, height = map(int, [width, height])
 
             # формируем имя изменненного изображения
             name = str(width) + str(height) + str(image)
@@ -64,7 +75,7 @@ def new_image(request):
             if img_file:
                 image = form.save()
                 image_id = image.id
-                return HttpResponseRedirect('../{}'.format(image_id))
+                return HttpResponseRedirect('../id/{}'.format(image_id))
 
             elif img_url:
                 name = img_url.split('/')[-1]
@@ -74,7 +85,7 @@ def new_image(request):
                                                sys.getsizeof(image_content), None)
                 image = Image.objects.create(file=new_pic)
                 image_id = image.id
-                return HttpResponseRedirect('../{}'.format(image_id))
+                return HttpResponseRedirect('../id/{}'.format(image_id))
     context = {'form': form}
     return render(request, 'image/new_image.html', context)
 

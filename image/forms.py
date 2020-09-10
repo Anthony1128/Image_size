@@ -28,3 +28,14 @@ class ChangeForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ['width', 'height']
+
+    # сохранение пропорций
+    def clean(self):
+        width = self.cleaned_data.get('width')
+        height = self.cleaned_data.get('height')
+
+        # запрет на не заполнение обеих форм
+        if not width and not height:
+            raise forms.ValidationError('At least one of fields is required')
+        return self.cleaned_data
+
