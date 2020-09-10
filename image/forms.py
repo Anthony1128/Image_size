@@ -13,7 +13,6 @@ class AddForm(forms.ModelForm):
     def clean(self):
         file = self.cleaned_data.get('file')
         url = self.cleaned_data.get('url')
-        image_content_type = requests.get(url).headers['Content-Type']
 
         # запрет на не заполнение обеих форм
         if not file and not url:
@@ -24,7 +23,7 @@ class AddForm(forms.ModelForm):
             raise forms.ValidationError('Only one of fields is required')
 
         # проверка url на формат
-        elif image_content_type != 'image/jpeg':
+        elif url and requests.get(url).headers['Content-Type'] != 'image/jpeg':
             raise forms.ValidationError('Wrong URL')
         return self.cleaned_data
 
