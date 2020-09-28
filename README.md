@@ -17,7 +17,7 @@
 ## Инструкция по развороту и запуску проекта
 
 Для запуска приложения необходимо:
-1. настроить окружение `source venv/bin/activate`
+1. установить необходимые зависимости `python -m pip install -r requirements.txt`
 2. делаем миграцию базы данных `python manage.py makemigrations`
 3. применяем миграцию к БД `python manage.py migrate`
 4. запустить приложение `python manage.py runserver`
