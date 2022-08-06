@@ -1,24 +1,24 @@
-# Сервис по загрузке и обработке изображений
+# Upload and transformation image service
 
-## Описание
+## Description
 
-Сервис, на основе фреймворка [Django](https://www.djangoproject.com/), который позволяет загружать изображения с компьютера пользователя, или по ссылке, а затем изменять их размер.
+Service, based on framework [Django](https://www.djangoproject.com/), which allows uploading an image from users local storage, or by link, and then change its size.
 
-На домашнем экране выводится список загруженных изображений. Изначально он пуст. Внизу списка есть ссылка на добавление изображения.
+The home screen displays a list of downloaded images. Initially it is empty. At the bottom of the list there is a link to add an image.
 
-Добавить изображение можно введя ссылку или выбрав файл с компьютера. Отправка формы возможна только при заполнении одного поля формы.
+It is possible to add an image by entering a link or by selecting a file from local storage. Submitting the form is allowed only when one field of the form is filled.
 
-После успешной загрузки, мы попадаем на страницу изображения. Изначально, изображение выводится в оригинальном размере. Через форму можно задать новые размеры. После отправки формы, страница обновится и изображение будет с новыми размерыами. 
-Можно задать только ширину, только высоту, или оба значения. 
-Пропорции изображения сохраняются при отправке только одного размера.
+After a successful upload, we get to the image page. Initially, the image is displayed in its original size. Through the form, you can set new dimensions. After submitting the form, the page will refresh and the image will be with the new dimensions.
+You can specify just the width, just the height, or both. 
+Image proportions are preserved when only one size is submitted.
 
-Со страницы изображения и со страницы добавления изображения можно вернуться назад к общему списку изображений. 
+From the image page and from the page for adding an image, you can go back to the general list of images.
 
-## Инструкция по развороту и запуску проекта
+## Deployment and run instruction
 
-Для запуска приложения необходимо:
-1. установить необходимые зависимости `python -m pip install -r requirements.txt`
-2. делаем миграцию базы данных `python manage.py makemigrations`
-3. применяем миграцию к БД `python manage.py migrate`
-4. запустить приложение `python manage.py runserver`
+To start the app follow next steps:
+1. install dependecies `python -m pip install -r requirements.txt`
+2. make database migrations `python manage.py makemigrations`
+3. apply migrations `python manage.py migrate`
+4. run the app `python manage.py runserver`
 

@@ -2,7 +2,7 @@ import os
 from django.db import models
 
 
-# модель загружаемого изображения
+# loading image model
 class Image(models.Model):
     file = models.ImageField(upload_to='origin/', blank=True,
                              height_field="height", width_field="width",)
@@ -15,7 +15,7 @@ class Image(models.Model):
         return filename
 
 
-# модель измененного изображения
+# changed image model
 class ChangedImage(models.Model):
     file = models.ImageField(upload_to='changed')
 

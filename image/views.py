@@ -11,14 +11,14 @@ from .models import Image, ChangedImage
 from .forms import AddForm, ChangeForm
 
 
-# контроллер стартовой страницы со списком всех загруженнных изображений
+# Starting page controller with the list of all loaded images
 def index(request):
     images = Image.objects.all()
     context = {'images': images}
     return render(request, 'image/index.html', context)
 
 
-# контроллер страницы изменения размера изображения
+# controller for changing image size page
 def one_image(request, image_id):
     image = Image.objects.get(id=image_id)
     proportion = image.width / image.height
@@ -27,10 +27,10 @@ def one_image(request, image_id):
     else:
         form = ChangeForm(request.POST)
         if form.is_valid():
-            # получаем ширину и высоту из формы
+            # get width and height from form
             width = form['width'].value()
             height = form['height'].value()
-            # сохраняем пропорции
+            # save proportions
             try:
                 width, height = map(int, [width, height])
             except ValueError:
@@ -41,10 +41,10 @@ def one_image(request, image_id):
                     height = int(width) / proportion
                     width, height = map(int, [width, height])
 
-            # формируем имя изменненного изображения
+            # construct name of changed image
             name = str(width) + str(height) + str(image)
 
-            # меняем размер с помощью класса Image(as Pillow) from PIL
+            # change image size by class Image(as Pillow) from PIL
             im = Pillow.open('{}'.format(MEDIA_ROOT+'/'+str(image.file)))
             out = im.resize((width, height))
             buffer = BytesIO()
@@ -54,13 +54,13 @@ def one_image(request, image_id):
                                            name, 'image/jpeg',
                                            sys.getsizeof(buffer), None)
 
-            # сохраняем изменное изображение
+            # save changed image
             image = ChangedImage.objects.create(file=new_pic)
     context = {'image': image, 'form': form}
     return render(request, 'image/image.html', context)
 
 
-# контроллер добавления нового изображения
+# controller for adding new image
 def new_image(request):
     if request.method != 'POST':
         form = AddForm()
@@ -68,7 +68,7 @@ def new_image(request):
         form = AddForm(request.POST, request.FILES)
         if form.is_valid():
 
-            # проверяем какая форма была заполненна url или file
+            # check which form was filled, url or file
             img_url = form.cleaned_data.get('url')
             img_file = form.cleaned_data.get('file')
 
